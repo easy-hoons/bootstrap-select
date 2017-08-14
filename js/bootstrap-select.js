@@ -562,8 +562,9 @@
        * @param [tokens]
        * @returns {string}
        */
-      var generateA = function (text, classes, inline, tokens) {
+      var generateA = function (text, classes, inline, tokens, href) {
         return '<a tabindex="0"' +
+            (href ? ' href="' + href + '"' : '') +
             (typeof classes !== 'undefined' ? ' class="' + classes + '"' : '') +
             (inline ? ' style="' + inline + '"' : '') +
             (that.options.liveSearchNormalize ? ' data-normalized-text="' + normalizeToBase(htmlEscape($(text).html())) + '"' : '') +
@@ -615,6 +616,8 @@
             isOptgroup = $parent[0].tagName === 'OPTGROUP',
             isOptgroupDisabled = isOptgroup && $parent[0].disabled,
             isDisabled = this.disabled || isOptgroupDisabled,
+            // $this.data('href') doesn't pick up changes on subsequent refresh() calls
+            href = $this.attr('data-href'),
             prevHiddenIndex;
 
         if (icon !== '' && isDisabled) {
@@ -675,7 +678,7 @@
             return;
           }
 
-          _li.push(generateLI(generateA(text, 'opt ' + optionClass + optGroupClass, inline, tokens), index, '', optID));
+          _li.push(generateLI(generateA(text, 'opt ' + optionClass + optGroupClass, inline, tokens, href), index, '', optID));
         } else if ($this.data('divider') === true) {
           _li.push(generateLI('', index, 'divider'));
         } else if ($this.data('hidden') === true) {
@@ -685,7 +688,7 @@
           prevHiddenIndex = $this.data('prevHiddenIndex');
           $this.next().data('prevHiddenIndex', (prevHiddenIndex !== undefined ? prevHiddenIndex : index));
 
-          _li.push(generateLI(generateA(text, optionClass, inline, tokens), index, 'hidden is-hidden'));
+          _li.push(generateLI(generateA(text, optionClass, inline, tokens, href), index, 'hidden is-hidden'));
         } else {
           var showDivider = this.previousElementSibling && this.previousElementSibling.tagName === 'OPTGROUP';
 
@@ -707,7 +710,7 @@
             liIndex++;
             _li.push(generateLI('', null, 'divider', optID + 'div'));
           }
-          _li.push(generateLI(generateA(text, optionClass, inline, tokens), index));
+          _li.push(generateLI(generateA(text, optionClass, inline, tokens, href), index));
         }
 
         that.liObj[index] = liIndex;
@@ -1169,9 +1172,9 @@
       }
 
       if (disabled) {
-        $lis.addClass('disabled').children('a').attr('href', '#').attr('tabindex', -1).attr('aria-disabled', true);
+        $lis.addClass('disabled').children('a').attr('tabindex', -1).attr('aria-disabled', true);
       } else {
-        $lis.removeClass('disabled').children('a').removeAttr('href').attr('tabindex', 0).attr('aria-disabled', false);
+        $lis.removeClass('disabled').children('a').attr('tabindex', 0).attr('aria-disabled', false);
       }
     },
 
@@ -1254,6 +1257,10 @@
             prevValue = that.$element.val(),
             prevIndex = that.$element.prop('selectedIndex'),
             triggerChange = true;
+
+        if ($this.attr('href')) {
+          return;
+        }
 
         // Don't close on multi choice menu
         if (that.multiple && that.options.maxOptions !== 1) {
