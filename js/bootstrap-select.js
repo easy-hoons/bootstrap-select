@@ -1159,6 +1159,9 @@
       }
 
       $lis.toggleClass('selected', selected).find('a').attr('aria-selected', selected);
+      if (this.options.liveSearch) {
+        $lis.toggleClass('active', selected);
+      }
     },
 
     /**
@@ -1440,10 +1443,10 @@
 
       this.$searchbox.on('input propertychange', function () {
         that.$lis.not('.is-hidden').removeClass('hidden');
-        that.$lis.filter('.active').removeClass('active');
         $no_results.remove();
 
         if (that.$searchbox.val()) {
+          that.$lis.filter('.active').removeClass('active');
           var $searchBase = that.$lis.not('.is-hidden, .divider, .dropdown-header'),
               $hideItems;
           if (that.options.liveSearchNormalize) {
