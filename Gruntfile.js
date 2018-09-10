@@ -196,6 +196,16 @@ module.exports = function (grunt) {
           'js/<%= pkg.name %>.js'
         ],
       },
+      docs: {
+        options: {
+          prefix: '<%= pkg.name %>/archive/v',
+          replace: '[0-9a-zA-Z\\-_\\+\\.]+)([^\/]+(?=\.zip+)'
+        },
+        src: [
+          'README.md',
+          'docs/docs/index.md'
+        ],
+      },
       cdn: {
         options: {
           prefix: 'ajax/libs/<%= pkg.name %>/'
@@ -293,7 +303,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build-css', ['clean:css', 'less', 'autoprefixer', 'usebanner:css', 'cssmin']);
 
   // JS distribution
-  grunt.registerTask('build-js', ['clean:js', 'concat', 'umd', 'usebanner:js', 'uglify']);
+  grunt.registerTask('build-js', ['clean:js', 'concat', 'umd', 'uglify', 'usebanner:js']);
 
   // Copy dist to docs
   grunt.registerTask('docs', ['clean:docs', 'copy:docs']);
