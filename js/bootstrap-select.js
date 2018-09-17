@@ -2702,7 +2702,6 @@
   };
 
   $(document)
-      .off('keydown.bs.dropdown.data-api')
       .on('keydown.bs.select', '.bootstrap-select [data-toggle="dropdown"], .bootstrap-select [role="listbox"], .bs-searchbox input', Selectpicker.prototype.keydown)
       .on('focusin.modal', '.bootstrap-select [data-toggle="dropdown"], .bootstrap-select [role="listbox"], .bs-searchbox input', function (e) {
         e.stopPropagation();
