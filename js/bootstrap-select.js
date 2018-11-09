@@ -1086,7 +1086,8 @@
             text = this.textContent,
             tokens = thisData.tokens,
             subtext = thisData.subtext,
-            href = thisData.href,
+            // $this.data('href') doesn't pick up changes on subsequent refresh() calls
+            href = $this.attr('data-href'),
             icon = thisData.icon,
             $parent = $this.parent(),
             parent = $parent[0],
